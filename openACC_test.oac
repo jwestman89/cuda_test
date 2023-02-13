@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <openacc.h>
+
+#define N 10
+
+void addArrays(int *a, int *b, int *c) {
+    int i;
+    #pragma acc parallel loop present(a,b,c)
+    for (i = 0; i < N; i++)
+        c[i] = a[i] + b[i];
+}
+
+int main() {
+    int a[N], b[N], c[N];
+    int i;
+
+    // Initialize input arrays
+    for (i = 0; i < N; i++) {
+        a[i] = i;
+        b[i] = i * 2;
+    }
+
+    // Launch the kernel
+    addArrays(a, b, c);
+
+    // Print the result
+    for (i = 0; i < N; i++)
+        printf("%d + %d = %d\n", a[i], b[i], c[i]);
+
+    return 0;
+}
